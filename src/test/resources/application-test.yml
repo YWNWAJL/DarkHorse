@@ -1,0 +1,7 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MySql
+    username: dark_horse
+    driver-class-name: org.h2.Driver
+  main:
+    allow-bean-definition-overriding: true
