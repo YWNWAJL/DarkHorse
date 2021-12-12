@@ -102,6 +102,16 @@ class OrderServiceTest extends BaseUnitTest {
     }
 
     @Test
+    void should_return_order_cancelled_when_request_meal_delivery_given_order_is_request_to_cancel() {
+        when(orderRepository.findById("10")).thenReturn(Optional.of(
+                OrderEntity.builder().id("10").restaurantAddress("餐厅地址").customerAddress("顾客地址").cancelStatus("REQUEST").build()));
+
+        OrderMealDeliveryRequestResult orderMealDeliveryRequestResult = orderService.orderMealDeliveryRequest("10");
+
+        assertThat(orderMealDeliveryRequestResult.getResult(), is("ORDER_CANCELLED"));
+    }
+
+    @Test
     void should_return_not_found_when_request_meal_delivery_given_order_not_found() {
         when(orderRepository.findById("3")).thenReturn(Optional.empty());
 

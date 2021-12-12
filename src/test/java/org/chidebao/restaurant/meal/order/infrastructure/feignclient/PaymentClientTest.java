@@ -41,4 +41,14 @@ class PaymentClientTest extends BaseUnitTest {
         assertThat(paymentResponse.getMessage(), is("payer余额不足"));
     }
 
+    @Test
+    void should_return_success_when_invoke_payment_api_given_return_success_with_attention() {
+        when(paymentFeignClient.pay(any())).thenReturn(PaymentResponse.builder().code("0").message("payer余额小于100元").build());
+
+        PaymentResponse paymentResponse = paymentClient.pay(PaymentRequest.from("2010", new BigDecimal("100.00")));
+
+        assertThat(paymentResponse.getCode(), is("0"));
+        assertThat(paymentResponse.getMessage(), is("payer余额小于100元"));
+    }
+
 }

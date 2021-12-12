@@ -14,8 +14,13 @@ import org.chidebao.restaurant.meal.order.service.model.OrderSettleResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Service
 public class OrderService {
+
+    private static final List<String> CANCEL_STATUS_LIST = Arrays.asList("REQUEST", "CANCELLED");
 
     @Autowired
     private OrderRepository orderRepository;
@@ -45,7 +50,7 @@ public class OrderService {
 
     public OrderMealDeliveryRequestResult orderMealDeliveryRequest(String orderId) {
         return orderRepository.findById(orderId).map(order -> {
-            if (StringUtils.equalsIgnoreCase(order.getCancelStatus(), "CANCELLED")) {
+            if (CANCEL_STATUS_LIST.contains(order.getCancelStatus())) {
                 return OrderMealDeliveryRequestResult.orderCancelled();
             }
             deliveryMQProducer.sendDeliveryRequestMessage(
